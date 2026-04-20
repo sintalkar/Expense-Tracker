@@ -1,0 +1,126 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the application",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoUrl": { "type": "string" },
+        "isAdmin": { "type": "boolean" },
+        "isBlocked": { "type": "boolean" },
+        "createdAt": { "type": "number", "description": "Timestamp" },
+        "lastActiveAt": { "type": "number", "description": "Timestamp" }
+      },
+      "required": ["email", "displayName", "isAdmin", "isBlocked", "createdAt"]
+    },
+    "Receipt": {
+      "title": "Receipt",
+      "description": "Scanned receipt data",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "merchant": { "type": "string" },
+        "date": { "type": "string" },
+        "total": { "type": "number" },
+        "currency": { "type": "string" },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "qty": { "type": "number" },
+              "price": { "type": "number" },
+              "category": { "type": "string" }
+            }
+          }
+        },
+        "dominantCategory": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "scannedAt": { "type": "number", "description": "Timestamp" },
+        "isSynced": { "type": "boolean" }
+      },
+      "required": ["userId", "merchant", "date", "total", "currency", "dominantCategory", "scannedAt"]
+    },
+    "Transaction": {
+      "title": "Transaction",
+      "description": "Gmail synced transaction",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "merchant": { "type": "string" },
+        "date": { "type": "string" },
+        "category": { "type": "string" },
+        "source": { "type": "string" }
+      },
+      "required": ["userId", "amount", "merchant", "date", "category"]
+    },
+    "FeatureFlag": {
+      "title": "Feature Flag",
+      "description": "Admin controlled feature toggle",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "enabled": { "type": "boolean" },
+        "rolloutPercent": { "type": "number" }
+      },
+      "required": ["name", "enabled"]
+    },
+    "AiPrompt": {
+      "title": "AI Prompt",
+      "description": "Admin controlled AI prompt",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "promptText": { "type": "string" },
+        "version": { "type": "number" },
+        "lastUpdatedBy": { "type": "string" },
+        "lastUpdatedAt": { "type": "number" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["name", "promptText", "version", "lastUpdatedBy", "lastUpdatedAt", "isActive"]
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "Log of admin actions",
+      "type": "object",
+      "properties": {
+        "action": { "type": "string" },
+        "performedBy": { "type": "string" },
+        "timestamp": { "type": "number" },
+        "details": { "type": "string" }
+      },
+      "required": ["action", "performedBy", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/users/{userId}/receipts/{receiptId}": {
+      "schema": { "$ref": "#/entities/Receipt" },
+      "description": "User receipts"
+    },
+    "/users/{userId}/transactions/{txId}": {
+      "schema": { "$ref": "#/entities/Transaction" },
+      "description": "User transactions"
+    },
+    "/admin_configs/feature_flags": {
+      "schema": { "$ref": "#/entities/FeatureFlag" },
+      "description": "Feature flags"
+    },
+    "/admin_configs/ai_prompts": {
+      "schema": { "$ref": "#/entities/AiPrompt" },
+      "description": "AI prompts"
+    },
+    "/admin_audit_logs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Audits"
+    }
+  }
+}
